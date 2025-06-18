@@ -11,3 +11,8 @@ export async function getUserFromStorage(): Promise<string | null> {
 export async function saveUserToStorage(username: string): Promise<void> {
   await AsyncStorage.setItem(KEY, username);
 }
+
+// Clears stored GitHub username
+export async function removeUserFromStorage(): Promise<void> {
+  await AsyncStorage.removeItem(KEY);
+}

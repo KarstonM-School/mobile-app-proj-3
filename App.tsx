@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { ActivityIndicator } from "react-native";
 import Navigator from "./src/nav/Navigator";
-import { getUserFromStorage } from "./src/services/storage";
+import { getUserFromStorage, removeUserFromStorage } from "./src/services/storage";
 
 export default function App() {
   // Track loading state and stored GitHub user
   const [initializing, setInitializing] = useState(true); // Loading from storage?
   const [githubUser, setGithubUser] = useState<string | null>(null);
+
+  const onSignOut = () => {
+    removeUserFromStorage(); // clear saved user
+    setGithubUser(null); // update state
+  };
 
   // On app load, check if user is stored and update
   useEffect(() => {
@@ -23,5 +28,5 @@ export default function App() {
   }
 
   // Render navigator, passing user state and sign-out callback
-  return <Navigator initialUser={githubUser} onSignIn={setGithubUser} onSignOut={() => setGithubUser(null)} />;
+  return <Navigator initialUser={githubUser} onSignIn={setGithubUser} onSignOut={onSignOut} />;
 }

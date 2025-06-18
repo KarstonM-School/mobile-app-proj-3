@@ -21,11 +21,10 @@ export default function MapPage({ username, onSignOut }: Props) {
     const setupMarkers = async () => {
       try {
         // Get current GPS location of logged-in user
-        const currPos = await getPos();
+        const [currPos, users] = await Promise.all([getPos(), getUsers()]);
         const selfMarker = { username, coord: currPos };
 
         // Fetch other GitHub users from mock API
-        const users = await getUsers();
         const apiMarkers = users.map((user) => ({
           username: user.username,
           coord: {
