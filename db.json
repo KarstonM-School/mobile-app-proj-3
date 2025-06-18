@@ -1,16 +1,18 @@
-[
-  {
-    "login": "torvalds",
-    "coord": {
-      "latitude": 51.046104,
-      "longitude": -114.088066
+{
+  "users": [
+    {
+      "login": "torvalds",
+      "coord": {
+        "latitude": 51.046104,
+        "longitude": -114.088066
+      }
+    },
+    {
+      "login": "gaearon",
+      "coord": {
+        "latitude": 50.976035,
+        "longitude": -114.01896
+      }
     }
-  },
-  {
-    "login": "gaearon",
-    "coord": {
-      "latitude": 50.976035,
-      "longitude": -114.01896
-    }
-  }
-]
+  ]
+}
