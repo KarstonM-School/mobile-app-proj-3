@@ -1,14 +1,14 @@
 {
   "users": [
     {
-      "login": "torvalds",
+      "username": "torvalds",
       "coord": {
         "latitude": 51.046104,
         "longitude": -114.088066
       }
     },
     {
-      "login": "gaearon",
+      "username": "gaearon",
       "coord": {
         "latitude": 50.976035,
         "longitude": -114.01896

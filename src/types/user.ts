@@ -1,6 +1,8 @@
 // User props
 export default interface User {
   username: string;
-  latitude: number;
-  longitude: number;
+  coord: {
+    latitude: number;
+    longitude: number;
+  };
 }

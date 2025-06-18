@@ -29,8 +29,8 @@ export default function MapPage({ username, onSignOut }: Props) {
         const apiMarkers = users.map((user) => ({
           username: user.username,
           coord: {
-            latitude: user.latitude,
-            longitude: user.longitude,
+            latitude: user.coord.latitude,
+            longitude: user.coord.longitude,
           },
         }));
 
