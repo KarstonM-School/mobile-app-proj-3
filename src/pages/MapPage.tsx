@@ -3,12 +3,8 @@ import { View, Modal, StyleSheet, TouchableOpacity, Text, BackHandler, StatusBar
 import MapView, { Marker, PROVIDER_GOOGLE, type LatLng } from "react-native-maps";
 import { WebView } from "react-native-webview";
 import { MapPageProps as Props } from "../types/navigation";
-
-// Calgary coords
-const CALGARY_COORD: LatLng = {
-  latitude: 51.0447,
-  longitude: -114.0719,
-};
+import { CALGARY_COORD, getPos } from "../services/gps-location";
+import { getUsers } from "../services/users";
 
 export default function MapPage({ username, onSignOut }: Props) {
   // Static list of GitHub users with coords
@@ -20,19 +16,32 @@ export default function MapPage({ username, onSignOut }: Props) {
   // Reference to WebView for back handling
   const webviewRef = useRef<any>(null);
 
-  // Generate random coords with offset from Calgary coords
-  const randomNearbyCoords = (): LatLng => ({
-    latitude: CALGARY_COORD.latitude + (Math.random() - 0.5) * 0.1,
-    longitude: CALGARY_COORD.longitude + (Math.random() - 0.5) * 0.1,
-  });
-
   // Initialize the static list of markers once on load
   useEffect(() => {
-    setMarkers([
-      { username, coord: randomNearbyCoords() },
-      { username: "torvalds", coord: randomNearbyCoords() },
-      { username: "gaearon", coord: randomNearbyCoords() },
-    ]);
+    const setupMarkers = async () => {
+      try {
+        // Get current GPS location of logged-in user
+        const currPos = await getPos();
+        const selfMarker = { username, coord: currPos };
+
+        // Fetch other GitHub users from mock API
+        const users = await getUsers();
+        const apiMarkers = users.map((user) => ({
+          username: user.username,
+          coord: {
+            latitude: user.latitude,
+            longitude: user.longitude,
+          },
+        }));
+
+        // Add current user to the top of the marker list
+        setMarkers([selfMarker, ...apiMarkers]);
+      } catch (err) {
+        console.error("Failed to set up markers:", err);
+      }
+    };
+
+    setupMarkers();
   }, []);
 
   // Handle hardware back button within WebView modal
@@ -69,8 +78,13 @@ export default function MapPage({ username, onSignOut }: Props) {
           longitudeDelta: 0.5,
         }}
       >
-        {markers.map((m) => (
-          <Marker key={m.username} coordinate={m.coord} title={m.username} onPress={() => openProfile(m.username)} />
+        {markers.map((m, index) => (
+          <Marker
+            key={`${m.username}-${index}`}
+            coordinate={m.coord}
+            title={m.username}
+            onPress={() => openProfile(m.username)}
+          />
         ))}
       </MapView>
 
